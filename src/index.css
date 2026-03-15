@@ -3,12 +3,14 @@
 @tailwind utilities;
 
 * {
-  font-family: Arial, Helvetica, 'Segoe UI', sans-serif;
+  font-family: 'Heebo', Arial, Helvetica, 'Segoe UI', sans-serif;
 }
 
 body {
   direction: rtl;
   text-align: right;
+  background: #f5f9ff;
+  color: #0c3058;
 }
 
 @keyframes fadeIn {

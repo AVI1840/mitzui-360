@@ -689,7 +689,7 @@ const uDot = (u: Urg) =>
   u === 'within30' ? 'bg-amber-500' :
   'bg-sky-500';
 const scenColor: Record<string, string> = {
-  blue: 'border-blue-500 bg-blue-50 hover:bg-blue-100',
+  blue: 'border-blue-500 bg-[#e8f3ff] hover:bg-[#d0e6fa]',
   green: 'border-green-500 bg-green-50 hover:bg-green-100',
   purple: 'border-purple-500 bg-purple-50 hover:bg-purple-100',
   orange: 'border-orange-500 bg-orange-50 hover:bg-orange-100',
@@ -697,7 +697,7 @@ const scenColor: Record<string, string> = {
   red: 'border-red-500 bg-red-50 hover:bg-red-100',
 };
 const scenBadge: Record<string, string> = {
-  blue: 'bg-blue-600 text-white',
+  blue: 'bg-[#0368b0] text-white',
   green: 'bg-green-600 text-white',
   purple: 'bg-purple-600 text-white',
   orange: 'bg-orange-600 text-white',
@@ -799,7 +799,7 @@ function FeedbackModal({
         <div className="flex border-b border-gray-200">
           {(['add', 'list'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
-              className={`flex-1 py-2.5 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-blue-600 text-blue-700' : 'text-gray-500 hover:text-gray-700'}`}>
+              className={`flex-1 py-2.5 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-[#0368b0] text-[#0368b0]' : 'text-gray-500 hover:text-gray-700'}`}>
               {t === 'add' ? '+ הוסף הערה' : `הערות (${items.length})`}
             </button>
           ))}
@@ -814,7 +814,7 @@ function FeedbackModal({
                 <div className="grid grid-cols-2 gap-2">
                   {(Object.keys(catLabel) as FeedbackCategory[]).map(c => (
                     <button key={c} onClick={() => setCat(c)}
-                      className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors ${cat === c ? 'bg-blue-700 text-white border-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                      className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors ${cat === c ? 'bg-[#0368b0] text-white border-[#0368b0]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
                       {catLabel[c]}
                     </button>
                   ))}
@@ -827,7 +827,7 @@ function FeedbackModal({
                 <div className="flex gap-2">
                   {(Object.keys(sevLabel) as FeedbackSeverity[]).map(s => (
                     <button key={s} onClick={() => setSev(s)}
-                      className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-colors ${sev === s ? 'bg-blue-700 text-white border-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                      className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-colors ${sev === s ? 'bg-[#0368b0] text-white border-[#0368b0]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
                       {sevLabel[s]}
                     </button>
                   ))}
@@ -838,18 +838,18 @@ function FeedbackModal({
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-2">תיאור הבעיה / הצורך *</label>
                 <textarea value={desc} onChange={e => setDesc(e.target.value)} rows={3} placeholder="תאר את הבעיה או את מה שצריך שיפור..."
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-blue-500 outline-none" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-[#0068f5] outline-none" />
               </div>
 
               {/* Suggestion */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-2">הצעה לתיקון / שיפור (אופציונלי)</label>
                 <textarea value={sugg} onChange={e => setSugg(e.target.value)} rows={2} placeholder="הצע פתרון או שיפור..."
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-blue-500 outline-none" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-[#0068f5] outline-none" />
               </div>
 
               <button onClick={submit} disabled={!desc.trim()}
-                className={`w-full py-3 rounded-xl font-bold text-sm transition-colors ${desc.trim() ? 'bg-blue-700 text-white hover:bg-blue-800' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+                className={`w-full py-3 rounded-xl font-bold text-sm transition-colors ${desc.trim() ? 'bg-[#0368b0] text-white hover:bg-[#025a8f]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
                 שמור הערה
               </button>
             </div>
@@ -861,7 +861,7 @@ function FeedbackModal({
               {items.map((e, i) => (
                 <div key={e.id} className="bg-gray-50 border border-gray-200 rounded-xl p-3">
                   <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                    <span className="text-xs font-bold text-blue-700">{catLabel[e.category]}</span>
+                    <span className="text-xs font-bold text-[#0368b0]">{catLabel[e.category]}</span>
                     <span className="text-xs">{sevLabel[e.severity]}</span>
                     <span className="text-xs text-gray-400 mr-auto">{e.ts}</span>
                   </div>
@@ -966,16 +966,17 @@ export default function App() {
   const urgentCount = actions.filter(a => a.urg === 'urgent').length;
 
   return (
-    <div className="min-h-screen bg-slate-50 text-gray-900" dir="rtl">
+    <div className="min-h-screen bg-[#f5f9ff] text-[#0c3058]" dir="rtl">
 
       {/* ── HEADER ── */}
-      <header className="no-print bg-blue-900 text-white py-4 px-6 shadow-lg">
+      {/* [BTL-ADAPTED] Header */}
+      <header className="no-print bg-[#0c3058] text-[#f5f9ff] py-4 px-6 shadow-[0_2px_8px_rgba(6,77,173,0.15)]">
         <div className="max-w-5xl mx-auto flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl font-bold">360</div>
             <div>
               <h1 className="text-xl font-bold leading-none">מיצוי 360</h1>
-              <p className="text-blue-300 text-xs mt-0.5">כלי מיצוי זכויות — פקיד ביטוח לאומי</p>
+              <p className="text-[#e8f3ff]/70 text-xs mt-0.5">מצפן הטבות — כלי מיצוי זכויות לפקיד ביטוח לאומי</p>
             </div>
           </div>
           {step > 0 && (
@@ -990,16 +991,17 @@ export default function App() {
       </header>
 
       {/* ── STEP NAV ── */}
-      <nav className="no-print bg-white border-b border-gray-200 py-3 px-6 shadow-sm">
+      {/* [BTL-ADAPTED] Step nav */}
+      <nav className="no-print bg-white border-b border-black/10 py-3 px-6 shadow-[0_2px_8px_rgba(6,77,173,0.1)]">
         <div className="max-w-5xl mx-auto flex items-center gap-1">
           {STEPS.map((label, i) => (
             <Fragment key={i}>
-              {i > 0 && <div className={`flex-1 h-0.5 transition-colors ${i <= step ? 'bg-blue-600' : 'bg-gray-200'}`} />}
+              {i > 0 && <div className={`flex-1 h-0.5 transition-colors ${i <= step ? 'bg-[#0368b0]' : 'bg-gray-200'}`} />}
               <button
                 onClick={() => { if (i < step) { setStep(i); setResetPending(false); } }}
                 disabled={i > step}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all ${i === step ? 'bg-blue-700 text-white shadow' : i < step ? 'bg-blue-50 text-blue-700 cursor-pointer hover:bg-blue-100' : 'bg-gray-50 text-gray-400 cursor-default'}`}>
-                <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center font-bold ${i < step ? 'bg-blue-600 text-white' : ''}`}>{i < step ? '✓' : i + 1}</span>
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0068f5] focus-visible:ring-offset-2 ${i === step ? 'bg-[#0368b0] text-[#f5f9ff] shadow' : i < step ? 'bg-[#e8f3ff] text-[#0368b0] cursor-pointer hover:bg-[#d0e6fa]' : 'bg-gray-50 text-gray-400 cursor-default'}`}>
+                <span className={`w-5 h-5 rounded-full text-xs flex items-center justify-center font-bold ${i < step ? 'bg-[#0368b0] text-white' : ''}`}>{i < step ? '✓' : i + 1}</span>
                 {label}
               </button>
             </Fragment>
@@ -1014,8 +1016,8 @@ export default function App() {
         ══════════════════════════════════════ */}
         {step === 0 && (
           <section className="animate-fade-in">
-            <h2 className="text-lg font-bold mb-1 text-gray-800">בחר תרחיש</h2>
-            <p className="text-sm text-gray-500 mb-5">6 תרחישים מובנים לפי פרופילים קריטיים מ-btl-domain-engine</p>
+            <h2 className="text-lg font-bold mb-1 text-[#0c3058]">בחר תרחיש</h2>
+            <p className="text-sm text-[#266794] mb-5">6 תרחישים מובנים לפי פרופילים קריטיים מ-btl-domain-engine</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {SCENARIOS.map(s => (
                 <button
@@ -1056,12 +1058,12 @@ export default function App() {
                     <div className="flex items-start justify-between mb-1.5">
                       <h3 className="font-bold text-sm text-gray-900 flex-1 ml-2">{d.n}</h3>
                       <div className="flex flex-col items-end gap-1 shrink-0">
-                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full whitespace-nowrap">{d.b}</span>
+                        <span className="text-xs bg-[#e8f3ff] text-[#0368b0] px-2 py-0.5 rounded-full whitespace-nowrap">{d.b}</span>
                         {d.priority === 'high' && <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">עדיפות גבוהה</span>}
                       </div>
                     </div>
                     <p className="text-xs text-gray-500 mb-1">{d.ds}</p>
-                    <p className="text-xs font-semibold text-blue-800 mb-3">{d.am}</p>
+                    <p className="text-xs font-semibold text-[#0c3058] mb-3">{d.am}</p>
                     <div className="flex gap-2">
                       {(['relevant', 'check', 'not_relevant'] as DS[]).map(x => {
                         const lb = x === 'relevant' ? 'רלוונטי' : x === 'not_relevant' ? 'לא רלוונטי' : 'לבדיקה';
@@ -1080,7 +1082,7 @@ export default function App() {
             </div>
             <div className="mt-6 flex justify-start">
               <button disabled={!allSelected} onClick={() => { setDi(0); setStep(2); }}
-                className={`px-8 py-3 rounded-xl font-bold text-base transition-colors ${allSelected ? 'bg-blue-700 text-white hover:bg-blue-800 shadow-md' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+                className={`px-8 py-3 rounded-xl font-bold text-base transition-colors ${allSelected ? 'bg-[#0368b0] text-white hover:bg-[#025a8f] shadow-md' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
                 המשך לשאלות ←
               </button>
             </div>
@@ -1095,7 +1097,7 @@ export default function App() {
             {activeDoms.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-gray-500 text-lg mb-3">לא נבחרו תחומים רלוונטיים</p>
-                <button onClick={() => setStep(1)} className="text-blue-600 underline text-sm">חזרה לסריקה</button>
+                <button onClick={() => setStep(1)} className="text-[#0368b0] underline text-sm">חזרה לסריקה</button>
               </div>
             ) : (
               <>
@@ -1105,7 +1107,7 @@ export default function App() {
                     <span className="text-sm text-gray-400">תחום {di + 1} מתוך {activeDoms.length}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full transition-all" style={{ width: `${((di + 1) / activeDoms.length) * 100}%` }} />
+                    <div className="bg-[#0368b0] h-2 rounded-full transition-all" style={{ width: `${((di + 1) / activeDoms.length) * 100}%` }} />
                   </div>
                 </div>
 
@@ -1127,19 +1129,19 @@ export default function App() {
 
                       {q.at === 'number' && (
                         <input type="number" value={ans[q.id] ?? ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => sa(q.id, e.target.value === '' ? '' : Number(e.target.value))}
-                          className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+                          className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base text-right focus:ring-2 focus:ring-[#0068f5] focus:border-[#0068f5] outline-none" />
                       )}
 
                       {q.at === 'text' && (
                         <input type="text" value={ans[q.id] ?? ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => sa(q.id, e.target.value)}
-                          className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base text-right focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none" />
+                          className="w-full border border-gray-300 rounded-lg px-4 py-3 text-base text-right focus:ring-2 focus:ring-[#0068f5] focus:border-[#0068f5] outline-none" />
                       )}
 
                       {q.at === 'select' && q.opts && (
                         <div className="flex flex-wrap gap-2">
                           {q.opts.map((opt: string) => (
                             <button key={opt} onClick={() => sa(q.id, opt)}
-                              className={`flex-1 min-w-fit py-2.5 px-3 rounded-lg text-sm font-medium transition-colors border ${ans[q.id] === opt ? 'bg-blue-700 text-white border-blue-700' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                              className={`flex-1 min-w-fit py-2.5 px-3 rounded-lg text-sm font-medium transition-colors border ${ans[q.id] === opt ? 'bg-[#0368b0] text-white border-[#0368b0]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
                               {opt}
                             </button>
                           ))}
@@ -1152,7 +1154,7 @@ export default function App() {
                         </div>
                       )}
                       {q.info && (
-                        <div className="mt-3 flex items-start gap-2 bg-blue-50 border border-blue-200 rounded-lg p-3 text-blue-800 text-xs">
+                        <div className="mt-3 flex items-start gap-2 bg-[#e8f3ff] border border-[#0368b0]/20 rounded-lg p-3 text-[#0c3058] text-xs">
                           <span className="shrink-0">ℹ️</span><span>{q.info}</span>
                         </div>
                       )}
@@ -1167,7 +1169,7 @@ export default function App() {
                   </button>
                   {di < activeDoms.length - 1 ? (
                     <button onClick={() => setDi(di + 1)}
-                      className="px-6 py-2.5 rounded-xl bg-blue-700 text-white hover:bg-blue-800 font-medium shadow transition-colors text-sm">
+                      className="px-6 py-2.5 rounded-xl bg-[#0368b0] text-white hover:bg-[#025a8f] font-medium shadow transition-colors text-sm">
                       הבא ←
                     </button>
                   ) : (
@@ -1207,7 +1209,7 @@ export default function App() {
                   </span>
                 )}
                 <button onClick={() => window.print()}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-700 text-white hover:bg-blue-800 font-bold shadow transition-colors text-sm">
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0368b0] text-white hover:bg-[#025a8f] font-bold shadow transition-colors text-sm">
                   🖨️ הדפסה / PDF
                 </button>
               </div>
@@ -1215,7 +1217,7 @@ export default function App() {
 
             {/* SECTION A — פעולות נדרשות */}
             <div className="mb-6 print-summary">
-              <h3 className="text-base font-bold mb-3 text-blue-900 border-b-2 border-blue-200 pb-2">
+              <h3 className="text-base font-bold mb-3 text-[#0c3058] border-b-2 border-[#0368b0]/20 pb-2">
                 פעולות נדרשות ({actions.length})
               </h3>
               {actions.length === 0 ? (
@@ -1307,7 +1309,7 @@ export default function App() {
                 → חזרה לשאלות
               </button>
               <button onClick={doReset}
-                className="px-5 py-2.5 rounded-xl bg-blue-700 text-white hover:bg-blue-800 font-medium transition-colors text-sm">
+                className="px-5 py-2.5 rounded-xl bg-[#0368b0] text-white hover:bg-[#025a8f] font-medium transition-colors text-sm">
                 פגישה חדשה ↺
               </button>
             </div>
@@ -1316,8 +1318,8 @@ export default function App() {
 
       </main>
 
-      <footer className="no-print text-center py-4 text-xs text-gray-400 border-t border-gray-200 mt-10">
-        כלי עזר למיצוי זכויות 360 לפקידי ביטוח לאומי | אין שמירת מידע | מינהל גמלאות | {today}
+      <footer className="no-print text-center py-4 text-xs text-[#266794] border-t border-black/10 mt-10">
+        מצפן הטבות — כלי מיצוי זכויות 360 לפקידי ביטוח לאומי | אין שמירת מידע | אביעד יצחקי, מינהל גמלאות | {today}
       </footer>
 
       {/* ── FLOATING FEEDBACK BUTTON ── */}
