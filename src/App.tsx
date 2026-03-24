@@ -106,7 +106,8 @@ export default function App() {
       </main>
 
       <footer className="no-print text-center py-4 text-xs text-[#266794] border-t border-black/10 mt-10">
-        מצפן הטבות — כלי מיצוי זכויות 360 לפקידי ביטוח לאומי | אין שמירת מידע | אביעד יצחקי, מינהלי גמלאות, ביטוח לאומי | {today}
+        מצפן הטבות — כלי מיצוי זכויות 360 לפקידי ביטוח לאומי | אין שמירת מידע | אביעד יצחקי, מינהל גמלאות, ביטוח לאומי | {today}
+        <div className="mt-1 opacity-60">עדכון אחרון: 24.03.2026</div>
       </footer>
 
       {/* Floating feedback button */}
