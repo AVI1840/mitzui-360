@@ -1,7 +1,12 @@
 ﻿/**
- * מיצוי 360 — רכיב משוב מקצועי
+ * מיצוי 360 — רכיב משוב מקצועי עם שליחה לגוגל שיטס
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const STORAGE_KEY = 'btl-feedback-mitzui-360';
+const APP_NAME = 'מיצוי זכויות 360';
+const NAME_KEY = 'btl-feedback-user-name';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwD8CMFoP5XoOwRLwK_OxMMOFKF8fS2CRpbJkNdOHjbnJIepkOLzlGrg3GQNGRqbwB6bA/exec';
 
 export type FeedbackCategory = 'professional' | 'ux' | 'process' | 'data';
 export type FeedbackSeverity = 'critical' | 'improvement' | 'minor';
@@ -14,6 +19,8 @@ export interface FeedbackEntry {
   description: string;
   suggestion: string;
   ts: string;
+  name?: string;
+  sent?: boolean;
 }
 
 const catLabel: Record<FeedbackCategory, string> = {
@@ -22,11 +29,37 @@ const catLabel: Record<FeedbackCategory, string> = {
   process: '🔄 זרימת תהליך',
   data: '📊 נתונים / סכומים',
 };
+const catToSheet: Record<FeedbackCategory, string> = {
+  professional: '📋 תוכן מקצועי',
+  ux: '🎨 עיצוב',
+  process: '💡 שיפור',
+  data: '📊 נתונים',
+};
 const sevLabel: Record<FeedbackSeverity, string> = {
   critical: '🔴 קריטי',
   improvement: '🟡 שיפור',
   minor: '🟢 מינורי',
 };
+const sevToSheet: Record<FeedbackSeverity, string> = {
+  critical: 'קריטי', improvement: 'שיפור', minor: 'קטן',
+};
+
+async function sendToSheet(entry: FeedbackEntry): Promise<boolean> {
+  try {
+    await fetch(SHEET_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        app: APP_NAME, name: entry.name || 'אנונימי',
+        category: catToSheet[entry.category] || 'כללי',
+        severity: sevToSheet[entry.severity] || '—',
+        text: entry.description + (entry.suggestion ? ` | הצעה: ${entry.suggestion}` : ''),
+        page: entry.screen || window.location.pathname,
+      }),
+    });
+    return true;
+  } catch { return false; }
+}
 
 export function FeedbackModal({
   items, scenName, onAdd, onClose,
@@ -36,23 +69,43 @@ export function FeedbackModal({
   onAdd: (e: FeedbackEntry) => void;
   onClose: () => void;
 }) {
+  const [name, setName] = useState(() => localStorage.getItem(NAME_KEY) || '');
   const [cat, setCat] = useState<FeedbackCategory>('professional');
   const [sev, setSev] = useState<FeedbackSeverity>('improvement');
   const [desc, setDesc] = useState('');
   const [sugg, setSugg] = useState('');
-  const [copied, setCopied] = useState(false);
   const [tab, setTab] = useState<'add' | 'list'>('add');
+  const [sending, setSending] = useState(false);
+  const [lastStatus, setLastStatus] = useState<'' | 'ok' | 'offline'>('');
+  const [copied, setCopied] = useState(false);
 
-  const submit = () => {
-    if (!desc.trim()) return;
-    onAdd({
+  // Retry unsent items on open
+  useEffect(() => {
+    const unsent = items.filter(i => !i.sent);
+    if (!unsent.length) return;
+    Promise.all(unsent.map(i => sendToSheet(i)));
+  }, []);
+
+  const submit = async () => {
+    if (!desc.trim() || !name.trim()) return;
+    localStorage.setItem(NAME_KEY, name.trim());
+    setSending(true); setLastStatus('');
+    const entry: FeedbackEntry = {
       id: Date.now(), category: cat, severity: sev,
       screen: scenName || 'כללי',
       description: desc.trim(),
       suggestion: sugg.trim(),
       ts: new Date().toLocaleTimeString('he-IL'),
-    });
-    setDesc(''); setSugg(''); setTab('list');
+      name: name.trim(),
+      sent: false,
+    };
+    const ok = await sendToSheet(entry);
+    entry.sent = ok;
+    onAdd(entry);
+    setDesc(''); setSugg('');
+    setSending(false); setLastStatus(ok ? 'ok' : 'offline');
+    setTimeout(() => setLastStatus(''), 3000);
+    setTab('list');
   };
 
   const exportText = () => {
@@ -71,7 +124,6 @@ export function FeedbackModal({
       '',
       '=== סוף משוב ===',
     ].join('\n');
-
     navigator.clipboard.writeText(lines).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
@@ -94,7 +146,7 @@ export function FeedbackModal({
         <div className="flex border-b border-gray-200">
           {(['add', 'list'] as const).map(t => (
             <button key={t} onClick={() => setTab(t)}
-              className={`flex-1 py-2.5 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-[#0368b0] text-[#0368b0]' : 'text-gray-500 hover:text-gray-700'}`}>
+              className={`flex-1 py-2.5 text-sm font-medium transition-colors ${tab === t ? 'border-b-2 border-[#1B3A5C] text-[#1B3A5C]' : 'text-gray-500 hover:text-gray-700'}`}>
               {t === 'add' ? '+ הוסף הערה' : `הערות (${items.length})`}
             </button>
           ))}
@@ -103,13 +155,19 @@ export function FeedbackModal({
         <div className="overflow-y-auto flex-1 p-5">
           {tab === 'add' && (
             <div className="space-y-4">
+              {/* Name */}
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-2">שם</label>
+                <input value={name} onChange={e => setName(e.target.value)} placeholder="השם שלך"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm text-right" dir="rtl" />
+              </div>
               {/* Category */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-2">קטגוריה</label>
                 <div className="grid grid-cols-2 gap-2">
                   {(Object.keys(catLabel) as FeedbackCategory[]).map(c => (
                     <button key={c} onClick={() => setCat(c)}
-                      className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors ${cat === c ? 'bg-[#0368b0] text-white border-[#0368b0]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                      className={`py-2 px-3 rounded-lg text-xs font-medium border transition-colors ${cat === c ? 'bg-[#1B3A5C] text-white border-[#1B3A5C]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
                       {catLabel[c]}
                     </button>
                   ))}
@@ -122,7 +180,7 @@ export function FeedbackModal({
                 <div className="flex gap-2">
                   {(Object.keys(sevLabel) as FeedbackSeverity[]).map(s => (
                     <button key={s} onClick={() => setSev(s)}
-                      className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-colors ${sev === s ? 'bg-[#0368b0] text-white border-[#0368b0]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                      className={`flex-1 py-2 rounded-lg text-xs font-medium border transition-colors ${sev === s ? 'bg-[#1B3A5C] text-white border-[#1B3A5C]' : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
                       {sevLabel[s]}
                     </button>
                   ))}
@@ -133,32 +191,35 @@ export function FeedbackModal({
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-2">תיאור הבעיה / הצורך *</label>
                 <textarea value={desc} onChange={e => setDesc(e.target.value)} rows={3} placeholder="תאר את הבעיה או את מה שצריך שיפור..."
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-[#0068f5] outline-none" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-[#1B3A5C] outline-none" />
               </div>
 
               {/* Suggestion */}
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-2">הצעה לתיקון / שיפור (אופציונלי)</label>
                 <textarea value={sugg} onChange={e => setSugg(e.target.value)} rows={2} placeholder="הצע פתרון או שיפור..."
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-[#0068f5] outline-none" />
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-right resize-none focus:ring-2 focus:ring-[#1B3A5C] outline-none" />
               </div>
 
-              <button onClick={submit} disabled={!desc.trim()}
-                className={`w-full py-3 rounded-xl font-bold text-sm transition-colors ${desc.trim() ? 'bg-[#0368b0] text-white hover:bg-[#025a8f]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
-                שמור הערה
+              <button onClick={submit} disabled={!desc.trim() || !name.trim() || sending}
+                className={`w-full py-3 rounded-xl font-bold text-sm transition-colors ${desc.trim() && name.trim() && !sending ? 'bg-[#1B3A5C] text-white hover:bg-[#2A5A8C]' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+                {sending ? 'שולח...' : 'שמור הערה'}
               </button>
+              {lastStatus === 'ok' && <p className="text-xs text-green-600 text-center">✅ נשלח בהצלחה</p>}
+              {lastStatus === 'offline' && <p className="text-xs text-orange-500 text-center">📱 נשמר מקומית — יישלח כשיהיה חיבור</p>}
             </div>
           )}
 
           {tab === 'list' && (
             <div className="space-y-3">
               {items.length === 0 && <p className="text-gray-400 text-sm text-center py-6">אין הערות עדיין</p>}
-              {items.map((e, i) => (
+              {items.map((e) => (
                 <div key={e.id} className="bg-gray-50 border border-gray-200 rounded-xl p-3">
                   <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                    <span className="text-xs font-bold text-[#0368b0]">{catLabel[e.category]}</span>
+                    <span className="text-xs font-bold text-[#1B3A5C]">{catLabel[e.category]}</span>
                     <span className="text-xs">{sevLabel[e.severity]}</span>
-                    <span className="text-xs text-gray-400 mr-auto">{e.ts}</span>
+                    {e.sent ? <span className="text-xs text-green-600">✅</span> : <span className="text-xs text-orange-500">⏳</span>}
+                    <span className="text-xs text-gray-400 mr-auto">{e.name && `${e.name} · `}{e.ts}</span>
                   </div>
                   <p className="text-sm text-gray-800 font-medium">{e.description}</p>
                   {e.suggestion && <p className="text-xs text-gray-500 mt-1">💡 {e.suggestion}</p>}
@@ -175,7 +236,6 @@ export function FeedbackModal({
               className={`w-full py-2.5 rounded-xl text-sm font-bold transition-colors ${copied ? 'bg-green-600 text-white' : 'bg-gray-800 text-white hover:bg-gray-900'}`}>
               {copied ? '✓ הועתק ללוח!' : `📋 העתק ${items.length} הערות (לשליחה למפתח)`}
             </button>
-            <p className="text-xs text-gray-400 text-center mt-2">הדבק באימייל / Slack ושלח לצוות הפיתוח</p>
           </div>
         )}
       </div>
