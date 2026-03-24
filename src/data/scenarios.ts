@@ -141,7 +141,7 @@ export const SCENARIOS: Scenario[] = [
     name: 'קשיש/ה — הכנסה נמוכה',
     icon: '🏠',
     profile: 'פרופיל 1 — קשיש 67+ לבד, הכנסה נמוכה',
-    active: true,
+    active: false,
     color: 'green',
     domains: [
       {
@@ -258,7 +258,7 @@ export const SCENARIOS: Scenario[] = [
     name: 'שכול — אלמן/ה',
     icon: '🕊️',
     profile: 'פרופיל 2 — אלמנה/אלמן 55–65',
-    active: true,
+    active: false,
     color: 'purple',
     domains: [
       {
@@ -536,7 +536,7 @@ export const SCENARIOS: Scenario[] = [
     name: 'פיטורין / אבטלה',
     icon: '💼',
     profile: 'פרופיל 4 — עובד שפוטר/נפגע בעבודה',
-    active: true,
+    active: false,
     color: 'red',
     domains: [
       {
