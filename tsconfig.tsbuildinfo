@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/helpers.ts","./src/main.tsx","./src/types.ts","./src/vite-env.d.ts","./src/components/domainscanner.tsx","./src/components/feedbackmodal.tsx","./src/components/header.tsx","./src/components/questionflow.tsx","./src/components/scenarioselector.tsx","./src/components/summaryreport.tsx","./src/data/scenarios.ts"],"version":"5.9.3"}
