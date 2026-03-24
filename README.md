@@ -26,3 +26,13 @@ Push ל-main → GitHub Actions בונה ומפרסם אוטומטית ל-GitHub
 
 ---
 אביעד יצחקי, מינהל גמלאות | ביטוח לאומי | 2026
+
+
+---
+
+## 📄 ONE PAGER
+
+- [ONE PAGER (HTML)](https://avi1840.github.io/btl-projects-2026/html/mitzui-360.html)
+- [ONE PAGER (Word)](../one-pagers/word/04-mitzui-360.docx)
+- [פורטל כל הפרויקטים](https://avi1840.github.io/btl-projects-2026/)
+

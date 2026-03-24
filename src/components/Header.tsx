@@ -21,7 +21,7 @@ export function Header({ step, setStep, resetPending, setResetPending, doReset }
             <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-xl font-bold">360</div>
             <div>
               <h1 className="text-xl font-bold leading-none">מיצוי 360</h1>
-              <p className="text-[#e8f3ff]/70 text-xs mt-0.5">מצפן הטבות — כלי מיצוי זכויות לפקיד ביטוח לאומי</p>
+              <p className="text-[#e8f3ff]/70 text-xs mt-0.5">כלי מיצוי זכויות — v4.2</p>
             </div>
           </div>
           {step > 0 && (
