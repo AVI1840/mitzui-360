@@ -33,7 +33,7 @@ function BtlLogo() {
       </div>
       <div>
         <p className="text-[#0c3058] font-bold text-base leading-tight">המוסד לביטוח לאומי</p>
-        <p className="text-[#266794] text-xs">כלי מיצוי זכויות לפקידים — מיצוי 360</p>
+        <p className="text-[#266794] text-xs">כלי סיוע לפקידים במיצוי זכויות — מיצוי 360</p>
       </div>
     </div>
   );
@@ -240,7 +240,7 @@ export function SummaryReport({ scen, actions, traps, related, today, onBackToQu
           <p className="hidden print:block text-[10px]">עמוד 1</p>
         </div>
         <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between">
-          <p>כלי מיצוי זכויות לפקידים | מיצוי 360 | {today}</p>
+          <p>כלי סיוע לפקידים במיצוי זכויות | מיצוי 360 | {today}</p>
           <p className="hidden print:block text-[10px]">המוסד לביטוח לאומי</p>
         </div>
       </div>

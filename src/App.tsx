@@ -107,7 +107,7 @@ export default function App() {
       </main>
 
       <footer className="no-print text-center py-4 text-xs text-[#266794] border-t border-black/10 mt-10">
-        כלי מיצוי זכויות לפקידים | מיצוי 360 | אין שמירת מידע | {today}
+        כלי סיוע לפקידים במיצוי זכויות | מיצוי 360 | אין שמירת מידע | {today}
         <div className="mt-1 opacity-60">עדכון אחרון: 24.03.2026</div>
       </footer>
 
