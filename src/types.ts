@@ -45,6 +45,7 @@ export interface Domain {
   am: string;
   ds: string;
   priority?: 'high' | 'medium';
+  scanOnly?: boolean;
   qs: Q[];
   ars: AR[];
   trs?: TR[];

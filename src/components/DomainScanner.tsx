@@ -8,11 +8,13 @@ interface DomainScannerProps {
   scen: Scenario;
   domSt: SMap;
   sd: (id: string, v: DS) => void;
+  ans: Record<string, any>;
+  sa: (id: string, v: any) => void;
   allSelected: boolean;
   onNext: () => void;
 }
 
-export function DomainScanner({ scen, domSt, sd, allSelected, onNext }: DomainScannerProps) {
+export function DomainScanner({ scen, domSt, sd, ans, sa, allSelected, onNext }: DomainScannerProps) {
   const allDoms = scen.domains;
 
   return (
@@ -48,6 +50,33 @@ export function DomainScanner({ scen, domSt, sd, allSelected, onNext }: DomainSc
                   );
                 })}
               </div>
+              {/* Inline questions for scanOnly domains */}
+              {d.scanOnly && (v === 'relevant' || v === 'check') && (
+                <div className="mt-3 pt-3 border-t border-gray-200 space-y-3">
+                  {d.qs.filter(q => !q.showIf || q.showIf(ans)).map(q => (
+                    <div key={q.id}>
+                      <label className="block text-xs font-medium text-gray-700 mb-1.5">{q.text}</label>
+                      {q.at === 'boolean' && (
+                        <div className="flex gap-2">
+                          {[true, false].map(bv => (
+                            <button key={String(bv)} onClick={() => sa(q.id, bv)}
+                              className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition-colors border ${ans[q.id] === bv ? (bv ? 'bg-green-600 text-white border-green-600' : 'bg-red-500 text-white border-red-500') : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'}`}>
+                              {bv ? 'כן' : 'לא'}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                      {q.at === 'text' && (
+                        <input type="text" value={ans[q.id] ?? ''} onChange={(e: React.ChangeEvent<HTMLInputElement>) => sa(q.id, e.target.value)}
+                          className="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-xs text-right focus:ring-2 focus:ring-[#0068f5] outline-none" />
+                      )}
+                      {q.info && (
+                        <p className="text-[10px] text-[#0c3058] bg-[#e8f3ff] rounded p-1.5 mt-1">ℹ️ {q.info}</p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}

@@ -22,7 +22,7 @@ export function ScenarioSelector({ onSelect }: ScenarioSelectorProps) {
       {/* Welcome card */}
       <div className="bg-[#0c3058] text-white rounded-2xl p-6 shadow-lg">
         <h2 className="text-2xl font-bold mb-1">ברוכים הבאים למיצוי 360</h2>
-        <p className="text-[#b8d4f0] text-sm mb-5">כלי סיוע מקצועי לפקידי ביטוח לאומי — מיצוי זכויות מלא במקרים מורכבים</p>
+        <p className="text-[#b8d4f0] text-sm mb-5">כלי מיצוי זכויות לפקידי ביטוח לאומי — מיצוי זכויות מלא במקרים מורכבים</p>
         <p className="text-[#e8f3ff] text-sm mb-4">המערכת מסייעת לזהות את מלוא הזכויות המגיעות למבוטח. התהליך בנוי ב-3 שלבים:</p>
         <div className="grid grid-cols-3 gap-3">
           {[

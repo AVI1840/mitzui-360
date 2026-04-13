@@ -26,7 +26,8 @@ export default function App() {
 
   const scen = useMemo(() => SCENARIOS.find(s => s.id === scenId) || null, [scenId]);
   const allDoms = scen?.domains || [];
-  const activeDoms = useMemo(() => allDoms.filter(d => rel(domSt[d.id])), [allDoms, domSt]);
+  const activeDoms = useMemo(() => allDoms.filter(d => rel(domSt[d.id]) && !d.scanOnly), [allDoms, domSt]);
+  const allActiveDoms = useMemo(() => allDoms.filter(d => rel(domSt[d.id])), [allDoms, domSt]);
   const allSelected = allDoms.length > 0 && allDoms.every(d => domSt[d.id] != null);
 
   const allAnswered = useMemo(() => {
@@ -39,7 +40,7 @@ export default function App() {
 
   const actions = useMemo(() => {
     const res: { urg: Urg; text: string; tag: string }[] = [];
-    for (const dom of activeDoms) {
+    for (const dom of allActiveDoms) {
       for (const ar of dom.ars) {
         if (ar.cond(ans, domSt)) {
           res.push({
@@ -52,25 +53,25 @@ export default function App() {
     }
     const order: Record<Urg, number> = { urgent: 0, within30: 1, planning: 2 };
     return res.sort((a, b) => order[a.urg] - order[b.urg]);
-  }, [activeDoms, ans, domSt]);
+  }, [allActiveDoms, ans, domSt]);
 
   const traps = useMemo(() => {
     const res: { text: string; fix?: string }[] = [];
-    for (const dom of activeDoms) {
+    for (const dom of allActiveDoms) {
       for (const tr of dom.trs || []) {
         if (tr.cond(ans)) res.push({ text: tr.text, fix: tr.fix });
       }
     }
     return res;
-  }, [activeDoms, ans]);
+  }, [allActiveDoms, ans]);
 
   const related = useMemo(() => {
     const res: RB[] = [];
-    for (const dom of activeDoms) {
+    for (const dom of allActiveDoms) {
       for (const rb of dom.related || []) res.push(rb);
     }
     return res;
-  }, [activeDoms]);
+  }, [allActiveDoms]);
 
   const sa = useCallback((id: string, v: any) => setAns(p => ({ ...p, [id]: v })), []);
   const sd = useCallback((id: string, v: DS) => setDomSt(p => ({ ...p, [id]: v })), []);
@@ -93,20 +94,20 @@ export default function App() {
         {step === 0 && <ScenarioSelector onSelect={handleSelectScenario} />}
 
         {step === 1 && scen && (
-          <DomainScanner scen={scen} domSt={domSt} sd={sd} allSelected={allSelected} onNext={() => { setDi(0); setStep(2); }} />
+          <DomainScanner scen={scen} domSt={domSt} sd={sd} ans={ans} sa={sa} allSelected={allSelected} onNext={() => { setDi(0); setStep(2); }} />
         )}
 
         {step === 2 && scen && (
-          <QuestionFlow activeDoms={activeDoms} di={di} setDi={setDi} ans={ans} sa={sa} allAnswered={allAnswered} onBack={() => setStep(1)} onNext={() => setStep(3)} />
+          <QuestionFlow activeDoms={activeDoms} di={di} setDi={setDi} ans={ans} sa={sa} allAnswered={allAnswered} onBack={() => setStep(1)} onNext={() => setStep(3)} scenName={scen.name} domSt={domSt} allActiveDoms={allDoms} />
         )}
 
         {step === 3 && scen && (
-          <SummaryReport scen={scen} actions={actions} traps={traps} related={related} today={today} onBackToQuestions={() => setStep(2)} doReset={doReset} />
+          <SummaryReport scen={scen} actions={actions} traps={traps} related={related} today={today} onBackToQuestions={() => setStep(2)} doReset={doReset} ans={ans} />
         )}
       </main>
 
       <footer className="no-print text-center py-4 text-xs text-[#266794] border-t border-black/10 mt-10">
-        מצפן הטבות — כלי מיצוי זכויות 360 לפקידי ביטוח לאומי | אין שמירת מידע | אביעד יצחקי, מינהל גמלאות, ביטוח לאומי | {today}
+        כלי מיצוי זכויות לפקידים | מיצוי 360 | אין שמירת מידע | {today}
         <div className="mt-1 opacity-60">עדכון אחרון: 24.03.2026</div>
       </footer>
 
